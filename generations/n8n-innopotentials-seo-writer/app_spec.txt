@@ -1,0 +1,467 @@
+<project_specification>
+  <project_name>n8n-innopotentials-seo-writer</project_name>
+
+  <overview>
+    An n8n workflow automation that transforms external URLs and PDF documents into SEO-optimized WordPress blog posts for the DACH region (Germany, Austria, Switzerland). The system uses a Google Sheets interface for client input and approval, with AI-powered content generation and image creation running locally.
+  </overview>
+
+  <technology_stack>
+    <automation>
+      <platform>n8n</platform>
+      <hosting>Self-hosted Docker</hosting>
+    </automation>
+    <ai>
+      <llm>Ollama (local)</llm>
+      <image_generation>Flux Schnell (local, Apple Silicon M2 Max)</image_generation>
+    </ai>
+    <integrations>
+      <input>Google Sheets API + Google Apps Script</input>
+      <output>WordPress REST API + Application Password</output>
+      <notifications>Email (SMTP)</notifications>
+    </integrations>
+    <wordpress>
+      <theme>Spacious</theme>
+      <post_status>Draft</post_status>
+    </wordpress>
+  </technology_stack>
+
+  <prerequisites>
+    <environment_setup>
+      - Docker and Docker Compose installed
+      - n8n container running and accessible
+      - Ollama installed with suitable model (e.g., llama3, mistral)
+      - Flux Schnell set up via ComfyUI or diffusers on M2 Max
+      - Google Cloud project with Sheets API enabled
+      - WordPress site with Application Password created
+      - SMTP credentials for email notifications
+    </environment_setup>
+  </prerequisites>
+
+  <feature_count>49</feature_count>
+
+  <workflow_stages>
+    <stage number="1" name="Input">
+      <description>Client enters source data in Google Sheets</description>
+      <components>
+        - Google Sheet with structured columns
+        - URL field for source website (required)
+        - PDF links field for supplementary documents (optional)
+        - Language selector (German/English)
+        - Status tracking column
+        - Approve button (Google Apps Script)
+      </components>
+    </stage>
+
+    <stage number="2" name="Parse">
+      <description>Extract content from provided sources</description>
+      <components>
+        - Web scraper node for URL content extraction
+        - PDF parser for document text extraction
+        - Content cleaning and normalization
+        - Error handling for unreachable URLs or corrupt PDFs
+      </components>
+    </stage>
+
+    <stage number="3" name="Generate Content">
+      <description>AI creates SEO-optimized blog post</description>
+      <components>
+        - Ollama HTTP API integration
+        - DACH region keyword analysis prompt
+        - SEO-optimized blog post generation
+        - Category and tag suggestion
+        - Meta description generation
+        - Language-appropriate output (German or English)
+      </components>
+    </stage>
+
+    <stage number="4" name="Generate Image">
+      <description>Create featured image for blog post</description>
+      <components>
+        - Flux Schnell via ComfyUI API or diffusers
+        - Prompt generation based on blog content
+        - Image optimization for web (compression, resizing)
+        - Multiple aspect ratio support
+      </components>
+    </stage>
+
+    <stage number="5" name="Review">
+      <description>Client reviews and approves content</description>
+      <components>
+        - Generated content written back to Google Sheet
+        - Status updated to "Ready for Review"
+        - Client proofreads and edits if needed
+        - Approve button triggers webhook to n8n
+      </components>
+    </stage>
+
+    <stage number="6" name="Publish">
+      <description>Push approved content to WordPress</description>
+      <components>
+        - WordPress REST API integration
+        - Create post as draft
+        - Upload and attach featured image
+        - Assign categories and tags
+        - Set SEO metadata
+        - Update sheet status to "Published"
+      </components>
+    </stage>
+  </workflow_stages>
+
+  <google_sheets_structure>
+    <columns>
+      <column name="ID" type="auto">Auto-incrementing row identifier</column>
+      <column name="URL" type="text">Source website URL to parse (required)</column>
+      <column name="PDF_Links" type="text">Comma-separated PDF URLs (optional)</column>
+      <column name="Language" type="dropdown">German | English</column>
+      <column name="Status" type="text">Pending | Processing | Ready for Review | Approved | Published | Failed</column>
+      <column name="Error_Message" type="text">Error details if failed</column>
+      <column name="Generated_Title" type="text">AI-generated blog post title</column>
+      <column name="Generated_Content" type="text">AI-generated blog post body</column>
+      <column name="Generated_Keywords" type="text">Extracted DACH keywords</column>
+      <column name="Generated_Categories" type="text">Suggested WordPress categories</column>
+      <column name="Generated_Tags" type="text">Suggested WordPress tags</column>
+      <column name="Image_URL" type="text">Generated image URL or path</column>
+      <column name="Approve" type="button">Google Apps Script button to trigger publish</column>
+      <column name="WordPress_URL" type="text">Published draft URL</column>
+      <column name="Created_At" type="timestamp">Row creation timestamp</column>
+      <column name="Updated_At" type="timestamp">Last update timestamp</column>
+    </columns>
+  </google_sheets_structure>
+
+  <n8n_workflow_nodes>
+    <trigger_nodes>
+      <node name="Google Sheets Trigger">Webhook triggered by new row or Apps Script</node>
+      <node name="Approval Webhook">Receives approval button click from Apps Script</node>
+    </trigger_nodes>
+
+    <processing_nodes>
+      <node name="HTTP Request - Scrape URL">Fetch and parse website content</node>
+      <node name="HTTP Request - Download PDF">Download PDF documents</node>
+      <node name="Code - PDF Parser">Extract text from PDF using pdf-parse or similar</node>
+      <node name="Code - Content Cleaner">Normalize and clean extracted text</node>
+      <node name="HTTP Request - Ollama">Send prompt to local Ollama API</node>
+      <node name="HTTP Request - Flux/ComfyUI">Generate image via local Flux</node>
+      <node name="Code - Image Optimizer">Compress and resize image for web</node>
+      <node name="Google Sheets - Update">Write generated content back to sheet</node>
+      <node name="HTTP Request - WordPress">Create draft post via REST API</node>
+      <node name="HTTP Request - WordPress Media">Upload featured image</node>
+      <node name="Send Email">Notification on failure</node>
+    </processing_nodes>
+
+    <utility_nodes>
+      <node name="IF - Has PDF">Branch if PDF links provided</node>
+      <node name="IF - Success/Failure">Error handling branches</node>
+      <node name="Set - Variables">Configure dynamic values</node>
+      <node name="Merge">Combine parallel execution paths</node>
+    </utility_nodes>
+  </n8n_workflow_nodes>
+
+  <api_integrations>
+    <google_sheets>
+      <auth>OAuth2 or Service Account</auth>
+      <scopes>spreadsheets, drive.readonly</scopes>
+      <operations>read, update, append</operations>
+    </google_sheets>
+
+    <google_apps_script>
+      <purpose>Approval button webhook trigger</purpose>
+      <deployment>Web app with execute permissions</deployment>
+    </google_apps_script>
+
+    <ollama>
+      <endpoint>http://localhost:11434/api/generate</endpoint>
+      <model>llama3 or mistral (configurable)</model>
+    </ollama>
+
+    <flux_comfyui>
+      <endpoint>http://localhost:8188/prompt</endpoint>
+      <model>Flux Schnell</model>
+    </flux_comfyui>
+
+    <wordpress>
+      <endpoint>https://{site}/wp-json/wp/v2/</endpoint>
+      <auth>Application Password (Basic Auth)</auth>
+      <endpoints>
+        - POST /posts (create draft)
+        - POST /media (upload image)
+        - GET /categories (list categories)
+        - GET /tags (list tags)
+      </endpoints>
+    </wordpress>
+
+    <email>
+      <protocol>SMTP</protocol>
+      <purpose>Failure notifications</purpose>
+    </email>
+  </api_integrations>
+
+  <llm_prompts>
+    <keyword_extraction>
+      Analyze the following content and extract 5-10 SEO keywords relevant to the DACH region (Germany, Austria, Switzerland). Consider local search trends, German language variations, and regional business terminology.
+
+      Content: {parsed_content}
+      Language: {language}
+
+      Output format: comma-separated keywords
+    </keyword_extraction>
+
+    <blog_post_generation>
+      You are an expert SEO content writer for the DACH region. Write a comprehensive, SEO-optimized blog post based on the following source material.
+
+      Source Content: {parsed_content}
+      Target Keywords: {keywords}
+      Language: {language}
+
+      Requirements:
+      - Write in {language}
+      - Include target keywords naturally (2-3% density)
+      - Structure with H2 and H3 headings
+      - Include introduction and conclusion
+      - 800-1500 words
+      - Engaging, professional tone
+      - Optimized meta description (150-160 characters)
+
+      Output JSON format:
+      {
+        "title": "...",
+        "meta_description": "...",
+        "content": "...",
+        "suggested_categories": ["..."],
+        "suggested_tags": ["..."]
+      }
+    </blog_post_generation>
+
+    <image_prompt_generation>
+      Based on this blog post, generate a Flux image prompt for a professional featured image:
+
+      Title: {title}
+      Keywords: {keywords}
+
+      Create a prompt for a modern, professional blog header image. Avoid text in the image. Style: clean, corporate, relevant to the topic.
+    </image_prompt_generation>
+  </llm_prompts>
+
+  <error_handling>
+    <strategy>Mark failed in sheet + email notification</strategy>
+    <error_types>
+      <error type="url_unreachable">
+        <action>Set status to "Failed", record error message</action>
+        <notification>Yes</notification>
+      </error>
+      <error type="pdf_parse_failure">
+        <action>Set status to "Failed", record error message</action>
+        <notification>Yes</notification>
+      </error>
+      <error type="llm_timeout">
+        <action>Set status to "Failed", record error message</action>
+        <notification>Yes</notification>
+      </error>
+      <error type="image_generation_failure">
+        <action>Continue without image, note in sheet</action>
+        <notification>No</notification>
+      </error>
+      <error type="wordpress_api_error">
+        <action>Set status to "Failed", record error message</action>
+        <notification>Yes</notification>
+      </error>
+    </error_types>
+  </error_handling>
+
+  <processing_mode>
+    <type>Sequential</type>
+    <description>Process one row at a time to manage local resource usage (LLM + image generation)</description>
+  </processing_mode>
+
+  <core_features>
+    <google_sheets_integration>
+      - Read new rows with source URLs
+      - Read optional PDF links
+      - Update status column throughout workflow
+      - Write generated content back to sheet
+      - Handle approval button webhook
+      - Write final WordPress URL to sheet
+      - Record error messages on failure
+      - Support both German and English language selection
+    </google_sheets_integration>
+
+    <content_parsing>
+      - Scrape and extract text from URLs
+      - Handle various website structures
+      - Parse PDF documents
+      - Clean and normalize extracted text
+      - Combine multiple source documents
+      - Handle parsing failures gracefully
+    </content_parsing>
+
+    <ai_content_generation>
+      - Connect to local Ollama instance
+      - Extract DACH-relevant SEO keywords
+      - Generate SEO-optimized blog posts
+      - Support German and English output
+      - Generate meta descriptions
+      - Suggest categories and tags
+      - Create image generation prompts
+      - Handle LLM timeouts and errors
+      - Maintain consistent tone and style
+      - Ensure proper keyword density
+    </ai_content_generation>
+
+    <image_generation>
+      - Connect to local Flux via ComfyUI
+      - Generate featured images from prompts
+      - Optimize images for web performance
+      - Support WordPress media requirements
+      - Handle generation failures gracefully
+      - Compress images for fast loading
+    </image_generation>
+
+    <wordpress_publishing>
+      - Authenticate via Application Password
+      - Create posts as drafts
+      - Upload and attach featured images
+      - Assign AI-suggested categories
+      - Assign AI-suggested tags
+      - Set SEO metadata
+      - Compatible with Spacious theme
+      - Return published draft URL
+    </wordpress_publishing>
+
+    <approval_workflow>
+      - Google Apps Script button integration
+      - Webhook trigger on approval
+      - Status tracking throughout process
+      - Clear review state in sheet
+      - Prevent duplicate publishing
+    </approval_workflow>
+
+    <error_handling_notifications>
+      - Detect and categorize errors
+      - Update sheet status on failure
+      - Record detailed error messages
+      - Send email notifications
+      - Allow manual retry after fixes
+      - Continue workflow on non-critical errors
+    </error_handling_notifications>
+  </core_features>
+
+  <implementation_steps>
+    <step number="1">
+      <title>Environment Setup</title>
+      <tasks>
+        - Set up n8n Docker container
+        - Install and configure Ollama with chosen model
+        - Set up Flux Schnell via ComfyUI on M2 Max
+        - Configure SMTP for email notifications
+        - Create WordPress Application Password
+      </tasks>
+    </step>
+
+    <step number="2">
+      <title>Google Sheets Setup</title>
+      <tasks>
+        - Create Google Sheet with defined columns
+        - Set up Google Cloud project and enable APIs
+        - Create Google Apps Script for approval button
+        - Configure webhook URLs
+        - Test sheet connectivity
+      </tasks>
+    </step>
+
+    <step number="3">
+      <title>Content Parsing Workflow</title>
+      <tasks>
+        - Build URL scraping node
+        - Build PDF download and parsing nodes
+        - Implement content cleaning logic
+        - Add error handling for parsing failures
+        - Test with various URL and PDF types
+      </tasks>
+    </step>
+
+    <step number="4">
+      <title>AI Content Generation</title>
+      <tasks>
+        - Configure Ollama HTTP integration
+        - Implement keyword extraction prompt
+        - Implement blog post generation prompt
+        - Add language switching logic
+        - Test content quality and SEO optimization
+      </tasks>
+    </step>
+
+    <step number="5">
+      <title>Image Generation</title>
+      <tasks>
+        - Configure ComfyUI/Flux API integration
+        - Implement image prompt generation
+        - Add image optimization post-processing
+        - Test image quality and generation speed
+      </tasks>
+    </step>
+
+    <step number="6">
+      <title>Review Workflow</title>
+      <tasks>
+        - Implement write-back to Google Sheets
+        - Configure approval button webhook
+        - Add status tracking logic
+        - Test full review cycle
+      </tasks>
+    </step>
+
+    <step number="7">
+      <title>WordPress Publishing</title>
+      <tasks>
+        - Configure WordPress API authentication
+        - Implement draft post creation
+        - Implement media upload
+        - Add category and tag assignment
+        - Test with Spacious theme
+      </tasks>
+    </step>
+
+    <step number="8">
+      <title>Error Handling & Notifications</title>
+      <tasks>
+        - Implement error detection and categorization
+        - Configure email notification node
+        - Add comprehensive status updates
+        - Test failure scenarios
+      </tasks>
+    </step>
+
+    <step number="9">
+      <title>End-to-End Testing</title>
+      <tasks>
+        - Test complete workflow with real URLs
+        - Test with PDF documents
+        - Test both German and English
+        - Verify WordPress output quality
+        - Performance testing on M2 Max
+      </tasks>
+    </step>
+  </implementation_steps>
+
+  <success_criteria>
+    <functionality>
+      - Workflow triggers correctly from Google Sheets
+      - URLs and PDFs are parsed successfully
+      - AI generates quality SEO content in both languages
+      - Images are generated and optimized
+      - Content appears correctly in sheet for review
+      - Approval triggers WordPress publishing
+      - Drafts appear correctly in WordPress with Spacious theme
+    </functionality>
+    <reliability>
+      - Errors are caught and reported via email
+      - Failed rows are clearly marked with reasons
+      - Workflow recovers gracefully from failures
+      - No data loss during processing
+    </reliability>
+    <performance>
+      - Single post processed within reasonable time
+      - Image generation completes on M2 Max
+      - No resource exhaustion during operation
+    </performance>
+  </success_criteria>
+</project_specification>

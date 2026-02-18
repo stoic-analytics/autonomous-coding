@@ -1,5 +1,18 @@
-# Agent-generated output directories
-generations/
+# Agent-generated output directories (ignore contents, not the dir itself)
+generations/*
+
+# Track deliverables for saved projects
+!generations/n8n-innopotentials-seo-writer
+generations/n8n-innopotentials-seo-writer/*
+!generations/n8n-innopotentials-seo-writer/docker-compose.yml
+!generations/n8n-innopotentials-seo-writer/app_spec.txt
+!generations/n8n-innopotentials-seo-writer/PROMPT.md
+!generations/n8n-innopotentials-seo-writer/README.md
+!generations/n8n-innopotentials-seo-writer/init.sh
+!generations/n8n-innopotentials-seo-writer/run-loop.sh
+!generations/n8n-innopotentials-seo-writer/workflow-exports
+generations/n8n-innopotentials-seo-writer/workflow-exports/*
+!generations/n8n-innopotentials-seo-writer/workflow-exports/seo-writer-workflow-backup-20260218-222042.json
 
 # Log files
 logs/
