@@ -27,8 +27,8 @@ from agent import run_autonomous_agent
 
 
 # Configuration
-# DEFAULT_MODEL = "claude-sonnet-4-5-20250929"
-DEFAULT_MODEL = "claude-opus-4-5-20251101"
+# DEFAULT_MODEL = "claude-opus-4-5-20251101"
+DEFAULT_MODEL = "claude-sonnet-4-6"
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,7 +42,7 @@ Examples:
   python autonomous_agent_demo.py --project-dir ./claude_clone
 
   # Use a specific model
-  python autonomous_agent_demo.py --project-dir ./claude_clone --model claude-sonnet-4-5-20250929
+  python autonomous_agent_demo.py --project-dir ./claude_clone --model claude-sonnet-4-6
 
   # Limit iterations for testing
   python autonomous_agent_demo.py --project-dir ./claude_clone --max-iterations 5
