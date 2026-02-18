@@ -12,7 +12,7 @@ generations/n8n-innopotentials-seo-writer/*
 !generations/n8n-innopotentials-seo-writer/run-loop.sh
 !generations/n8n-innopotentials-seo-writer/workflow-exports
 generations/n8n-innopotentials-seo-writer/workflow-exports/*
-!generations/n8n-innopotentials-seo-writer/workflow-exports/seo-writer-workflow-backup-20260218-222042.json
+!generations/n8n-innopotentials-seo-writer/workflow-exports/seo-writer-workflow-backup-20260218-234439.json
 
 # Log files
 logs/

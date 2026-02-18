@@ -1,0 +1,2912 @@
+{
+  "id": "SG2TT84mIbmWvhyG",
+  "name": "SEO Writer Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-content-request",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "New Content Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "new-content-request"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "approve-content",
+        "options": {}
+      },
+      "id": "approval-webhook",
+      "name": "Approval Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        900
+      ],
+      "webhookId": "approve-content"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract variables from webhook input\nconst inputData = $input.first().json;\nconst body = inputData.body || inputData;\n\n// Get the row ID (required)\nconst rowId = body.ID || body.id || '';\nif (!rowId) {\n  return { json: { error: 'Row ID is required', rowId: '' } };\n}\n\n// Get the source URL (required)\nconst sourceUrl = body.URL || body.url || '';\nif (!sourceUrl) {\n  return { json: { error: 'URL is required', rowId: rowId } };\n}\n\n// Get optional fields\nconst pdfLinks = body.pdfLinks || body.PDF_Links || body.pdf_links || '';\nconst language = body.Language || body.language || 'German';\n\nreturn {\n  json: {\n    rowId: rowId,\n    sourceUrl: sourceUrl,\n    pdfLinks: pdfLinks,\n    language: language\n  }\n};"
+      },
+      "id": "set-variables",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.rowId }}",
+            "Status": "Processing",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PDF_Links",
+              "displayName": "PDF_Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_Message",
+              "displayName": "Error_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Title",
+              "displayName": "Generated_Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Content",
+              "displayName": "Generated_Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Keywords",
+              "displayName": "Generated_Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Categories",
+              "displayName": "Generated_Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Tags",
+              "displayName": "Generated_Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approve",
+              "displayName": "Approve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WordPress_URL",
+              "displayName": "WordPress_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created_At",
+              "displayName": "Created_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "set-processing-status",
+      "name": "Set Processing Status",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        1250,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Merge Row Data').first().json.sourceUrl }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "maxRedirects": 5
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "fetch-url",
+      "name": "Fetch URL Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1500,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and clean text content from HTML\nconst inputData = $input.first().json;\nconst variables = $('Merge Row Data').first().json;\n\n// Check for HTTP request errors\nif (inputData.error) {\n  return {\n    json: {\n      error: `Failed to fetch URL: ${inputData.error}`,\n      sourceUrl: variables.sourceUrl,\n      rowId: variables.rowId\n    }\n  };\n}\n\nconst html = inputData.data || inputData.body || '';\n\nif (!html || html.length < 100) {\n  return {\n    json: {\n      error: 'No content retrieved from URL or content too short',\n      sourceUrl: variables.sourceUrl,\n      rowId: variables.rowId\n    }\n  };\n}\n\n// Remove script and style tags\nlet cleaned = html.replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '');\ncleaned = cleaned.replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '');\ncleaned = cleaned.replace(/<noscript[^>]*>[\\s\\S]*?<\\/noscript>/gi, '');\ncleaned = cleaned.replace(/<nav[^>]*>[\\s\\S]*?<\\/nav>/gi, '');\ncleaned = cleaned.replace(/<footer[^>]*>[\\s\\S]*?<\\/footer>/gi, '');\ncleaned = cleaned.replace(/<header[^>]*>[\\s\\S]*?<\\/header>/gi, '');\n\n// Remove HTML comments\ncleaned = cleaned.replace(/<!--[\\s\\S]*?-->/g, '');\n\n// Remove HTML tags but keep text\ncleaned = cleaned.replace(/<[^>]+>/g, ' ');\n\n// Normalize whitespace\ncleaned = cleaned.replace(/\\s+/g, ' ').trim();\n\n// Decode HTML entities\ncleaned = cleaned.replace(/&nbsp;/g, ' ');\ncleaned = cleaned.replace(/&amp;/g, '&');\ncleaned = cleaned.replace(/&lt;/g, '<');\ncleaned = cleaned.replace(/&gt;/g, '>');\ncleaned = cleaned.replace(/&quot;/g, '\"');\ncleaned = cleaned.replace(/&#39;/g, \"'\");\ncleaned = cleaned.replace(/&apos;/g, \"'\");\n\n// Limit content length to prevent LLM issues\nif (cleaned.length > 10000) {\n  cleaned = cleaned.substring(0, 10000) + '...';\n}\n\n// Validate minimum content length\nif (cleaned.length < 200) {\n  return {\n    json: {\n      error: 'Extracted content too short (less than 200 characters)',\n      sourceUrl: variables.sourceUrl,\n      rowId: variables.rowId\n    }\n  };\n}\n\nreturn {\n  json: {\n    cleanedContent: cleaned,\n    contentLength: cleaned.length,\n    sourceUrl: variables.sourceUrl,\n    language: variables.language,\n    rowId: variables.rowId,\n    pdfLinks: variables.pdfLinks\n  }\n};"
+      },
+      "id": "clean-content",
+      "name": "Clean Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "scrape-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-scrape-error",
+      "name": "Scrape Successful?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "pdf-check",
+              "leftValue": "={{ $json.pdfLinks }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-pdf",
+      "name": "Has PDF?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse PDF links and download each one\nconst pdfLinksStr = $input.first().json.pdfLinks || '';  \nconst pdfLinks = pdfLinksStr.split(',').map(link => link.trim()).filter(link => link.length > 0);\n\n// Validate PDF links - just check they are valid URLs\nconst validPdfLinks = pdfLinks.filter(link => {\n  try {\n    new URL(link);\n    return true;\n  } catch {\n    return false;\n  }\n});\n\nif (validPdfLinks.length === 0) {\n  // No valid PDF links, continue without PDFs\n  return {\n    json: {\n      ...($input.first().json),\n      pdfError: 'No valid PDF links found',\n      hadPdfs: false\n    }\n  };\n}\n\n// Return array of items for each PDF link\nreturn validPdfLinks.map(link => ({\n  json: {\n    pdfUrl: link,\n    cleanedContent: $input.first().json.cleanedContent,\n    sourceUrl: $input.first().json.sourceUrl,\n    language: $input.first().json.language,\n    rowId: $input.first().json.rowId\n  }\n}));"
+      },
+      "id": "parse-pdf-links",
+      "name": "Parse PDF Links",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.pdfUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "id": "download-pdf",
+      "name": "Download PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2750,
+        80
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "extract-pdf-text",
+      "name": "Extract PDF Text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        80
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge all PDF text with the webpage content\nconst items = $input.all();\nlet allPdfText = '';\nlet pdfCount = 0;\n\nfor (const item of items) {\n  if (item.json.data) {\n    allPdfText += '\\n\\n--- PDF Content ---\\n' + item.json.data;\n    pdfCount++;\n  }\n}\n\n// Get original content from first item\nconst firstItem = items[0];\nconst originalContent = firstItem.json.cleanedContent || '';\n\nreturn {\n  json: {\n    cleanedContent: originalContent + allPdfText,\n    contentLength: (originalContent + allPdfText).length,\n    sourceUrl: firstItem.json.sourceUrl,\n    language: firstItem.json.language,\n    rowId: firstItem.json.rowId,\n    hadPdfs: pdfCount > 0,\n    pdfCount: pdfCount\n  }\n};"
+      },
+      "id": "merge-content",
+      "name": "Merge Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3250,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\"model\": \"mistral:latest\", \"prompt\": \"Read this text and identify the 5-10 MAIN topics it is about. Ignore minor mentions. Output keywords in \" + $('Merge Row Data').first().json.language + \". Output only comma-separated keywords:\\n\\n\" + $json.cleanedContent, \"stream\": false}) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "ollama-keywords",
+      "name": "Extract Keywords",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        3000,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "kw-error-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty"
+              }
+            },
+            {
+              "id": "kw-response-check",
+              "leftValue": "={{ $json.response }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-ollama-error",
+      "name": "Keywords OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\"model\": \"mistral:latest\", \"prompt\": \"IMPORTANT: Write EVERYTHING in \" + $('Clean Content').first().json.language + \". All text must be in \" + $('Clean Content').first().json.language + \".\\n\\nWrite a blog post that summarizes and explains the following source material. The blog post MUST be about the SAME TOPIC as the source. Do NOT change the subject.\\n\\nSource material:\\n\" + $('Clean Content').first().json.cleanedContent + \"\\n\\nKeywords to include: \" + $json.response + \"\\n\\nRequirements: Write in \" + $('Clean Content').first().json.language + \", stay faithful to the source topic, use H2 and H3 Markdown headings, 800-1500 words, professional tone. Output ONLY valid JSON: {\\\"title\\\": \\\"...\\\", \\\"meta_description\\\": \\\"...\\\", \\\"content\\\": \\\"...\\\", \\\"suggested_categories\\\": [...], \\\"suggested_tags\\\": [...]}\", \"stream\": false}) }}",
+        "options": {
+          "timeout": 600000
+        }
+      },
+      "id": "ollama-blog-post",
+      "name": "Generate Blog Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        3500,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": " const inputData = $input.first().json;\n  const cleanContent = $('Clean Content').first().json;                                                                                                              \n                                                                                                   \n  if (inputData.error) {\n    return { json: { error: `Failed to generate blog post: ${inputData.error}`, rowId: cleanContent.rowId } };\n  }\n\n  const response = inputData.response;\n  if (!response) {\n    return { json: { error: 'Empty response from LLM', rowId: cleanContent.rowId } };\n  }\n\n  try {\n    let title = '', meta_description = '', content = '';\n    let suggested_categories = [], suggested_tags = [];\n\n    const jsonMatch = response.match(/\\{[\\s\\S]*\\}/);\n\n    if (jsonMatch) {\n      let parsed = null;\n\n      // Try 1: Direct JSON parse\n      try {\n        parsed = JSON.parse(jsonMatch[0]);\n      } catch (e) {\n        // Try 2: Fix newlines\n        try {\n          parsed = JSON.parse(jsonMatch[0].replace(/[\\n\\r\\t]/g, ' '));\n        } catch (e2) {\n          // Try 3: Fix double-escaped quotes from mistral\n          try {\n            const fixed = jsonMatch[0].replace(/\"\"/g, '\"').replace(/[\\n\\r\\t]/g, ' ');\n            parsed = JSON.parse(fixed);\n          } catch (e3) {}\n        }\n      }\n\n      if (parsed) {\n        title = parsed.title || '';\n        meta_description = parsed.meta_description || '';\n        suggested_categories = parsed.suggested_categories || [];\n        suggested_tags = parsed.suggested_tags || [];\n        if (parsed.content && parsed.content.length > 100) content = parsed.content;\n      }\n    }\n\n    // Fallback: extract title from JSON-like text\n    if (!title) {\n      const m = response.match(/\"title\"\\s*:\\s*\"([^\"]+)\"/) ||\n                response.match(/\"\"title\"\"\\s*:\\s*\"\"([^\"]+)\"\"/) ||\n                response.match(/\\*\\*Titel?:\\*\\*\\s*\"?([^\"\\n]+)\"?/i);\n      if (m) title = m[1].trim();\n    }\n\n     // Fallback: extract meta_description\n    if (!meta_description) {\n      const m = response.match(/\"\"meta_description\"\"\\s*:\\s*\"\"([\\s\\S]+?)\"\"\\s*,/) ||\n                response.match(/\"meta_description\"\\s*:\\s*\"([^\"]+)\"/);\n      if (m) meta_description = m[1].replace(/\\n/g, ' ').trim();\n    }\n\n     // Fallback: extract content from markdown code block\n    if (!content || content.length < 100) {\n      const mdMatch = response.match(/```markdown\\s*([\\s\\S]+?)```/);\n      if (mdMatch && mdMatch[1].length > 100) {\n        content = mdMatch[1].trim();\n      }\n    }\n\n    // Fallback: extract content from double-quoted JSON (mistral format)\n    if (!content || content.length < 100) {\n      const m = response.match(/\"\"content\"\"\\s*:\\s*\\n?\\s*\"\"([\\s\\S]+?)\"\"\\s*\\n?\\s*\"\"suggested/);\n      if (m && m[1].length > 100) {\n        content = m[1].trim();\n      }\n    }\n\n    // Fallback: extract content from JSON-like structure\n    if (!content || content.length < 100) {\n      const m = response.match(/\"content\"\\s*:\\s*\"([\\s\\S]+?)\"\\s*,\\s*\"suggested/);\n      if (m && m[1].length > 100) {\n        content = m[1].replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"');\n      }\n    }\n\n    // Last resort: use full response as content\n    if (!content || content.length < 100) {\n      content = response.replace(/```json[\\s\\S]*?```/g, '').trim();\n    }\n\n    // Fallback: extract categories/tags from text\n    if (suggested_categories.length === 0) {\n      const m = response.match(/\"suggested_categories\"\\s*:\\s*\\[([\\s\\S]*?)\\]/);\n      if (m) {\n        suggested_categories = m[1].match(/\"([^\"]+)\"/g)?.map(s => s.replace(/\"/g, '')) || [];\n      }\n    }\n\n    if (suggested_tags.length === 0) {\n      const m = response.match(/\"suggested_tags\"\\s*:\\s*\\[([\\s\\S]*?)\\]/);\n      if (m) {\n        suggested_tags = m[1].match(/\"([^\"]+)\"/g)?.map(s => s.replace(/\"/g, '')) || [];\n      }\n    }\n\n    if (!title || !content || content.length < 50) {\n      throw new Error('Could not extract title or content');\n    }\n\n    return {\n      json: {\n        title, meta_description, content, suggested_categories, suggested_tags,\n        keywords: $('Extract Keywords').first().json.response,\n        rowId: cleanContent.rowId, language: cleanContent.language\n      }\n    };\n  } catch (error) {\n    return { json: { error: `Failed to parse LLM response: ${error.message}`, rawResponse: response.substring(0, 500), rowId: cleanContent.rowId } };\n  }"
+      },
+      "id": "parse-blog-response",
+      "name": "Parse Blog Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "parse-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-parse-error",
+      "name": "Parse OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\"model\": \"mistral:latest\", \"prompt\": \"Based on this blog post title, generate a Flux image prompt for a professional featured image. Title: \" + $json.title + \". Keywords: \" + $json.keywords + \". Create a prompt for a modern, professional blog header image. Avoid text in the image. Output ONLY the image prompt, nothing else.\", \"stream\": false}) }}",
+        "options": {
+          "timeout": 80000
+        }
+      },
+      "id": "generate-image-prompt",
+      "name": "Generate Image Prompt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        4250,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8188/prompt",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": {\n    \"1\": {\n      \"class_type\": \"UNETLoader\",\n      \"inputs\": {\n        \"unet_name\": \"flux1-schnell.safetensors\",\n        \"weight_dtype\": \"default\"\n      }\n    },\n    \"2\": {\n      \"class_type\": \"DualCLIPLoader\",\n      \"inputs\": {\n        \"clip_name1\": \"t5xxl_fp8_e4m3fn.safetensors\",\n        \"clip_name2\": \"clip_l.safetensors\",\n        \"type\": \"flux\"\n      }\n    },\n    \"3\": {\n      \"class_type\": \"VAELoader\",\n      \"inputs\": {\n        \"vae_name\": \"ae.safetensors\"\n      }\n    },\n    \"4\": {\n      \"class_type\": \"CLIPTextEncode\",\n      \"inputs\": {\n        \"text\": \"{{ ($json.response || '').replace(/\\\"/g, '\\\\\\\"').replace(/\\n/g, ' ') }}\",\n        \"clip\": [\"2\", 0]\n      }\n    },\n    \"5\": {\n      \"class_type\": \"FluxGuidance\",\n      \"inputs\": {\n        \"conditioning\": [\"4\", 0],\n        \"guidance\": 3.5\n      }\n    },\n    \"6\": {\n      \"class_type\": \"BasicGuider\",\n      \"inputs\": {\n        \"model\": [\"1\", 0],\n        \"conditioning\": [\"5\", 0]\n      }\n    },\n    \"7\": {\n      \"class_type\": \"EmptySD3LatentImage\",\n      \"inputs\": {\n        \"width\": 1200,\n        \"height\": 675,\n        \"batch_size\": 1\n      }\n    },\n    \"8\": {\n      \"class_type\": \"RandomNoise\",\n      \"inputs\": {\n        \"noise_seed\": {{ Math.floor(Math.random() * 1000000000) }}\n      }\n    },\n    \"9\": {\n      \"class_type\": \"KSamplerSelect\",\n      \"inputs\": {\n        \"sampler_name\": \"euler\"\n      }\n    },\n    \"10\": {\n      \"class_type\": \"BasicScheduler\",\n      \"inputs\": {\n        \"model\": [\"1\", 0],\n        \"scheduler\": \"simple\",\n        \"steps\": 4,\n        \"denoise\": 1.0\n      }\n    },\n    \"11\": {\n      \"class_type\": \"SamplerCustomAdvanced\",\n      \"inputs\": {\n        \"noise\": [\"8\", 0],\n        \"guider\": [\"6\", 0],\n        \"sampler\": [\"9\", 0],\n        \"sigmas\": [\"10\", 0],\n        \"latent_image\": [\"7\", 0]\n      }\n    },\n    \"12\": {\n      \"class_type\": \"VAEDecode\",\n      \"inputs\": {\n        \"samples\": [\"11\", 0],\n        \"vae\": [\"3\", 0]\n      }\n    },\n    \"13\": {\n      \"class_type\": \"SaveImage\",\n      \"inputs\": {\n        \"filename_prefix\": \"seo-writer-{{ $('Parse Blog Response').first().json.rowId }}\",\n        \"images\": [\"12\", 0]\n      }\n    }\n  }\n}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "comfyui-generate",
+      "name": "Generate Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        4500,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Wait for ComfyUI image generation to complete\nconst inputData = $input.first().json;\nconst blogData = $(\"Parse Blog Response\").first().json;\n\nlet imageUrl = \"\";\nlet imageGenerated = false;\n\nif (!inputData.error && inputData.prompt_id) {\n  const promptId = inputData.prompt_id;\n  const comfyHost = \"http://host.docker.internal:8188\";\n\n  console.log(\"[HandleImg] Starting poll for promptId:\", promptId, \"rowId:\", blogData.rowId);\n\n  // Poll ComfyUI history until the image is ready (max 10 minutes)\n  const maxWait = 600000; // 10 minutes\n  const pollInterval = 10000; // 10 seconds\n  let elapsed = 0;\n  let iteration = 0;\n\n  while (elapsed < maxWait) {\n    iteration++;\n    try {\n      const controller = new AbortController();\n      const timeoutId = setTimeout(() => controller.abort(), 8000);\n\n      let rawText = null;\n      let history = null;\n      try {\n        const historyResponse = await fetch(comfyHost + \"/history/\" + promptId, { signal: controller.signal });\n        rawText = await historyResponse.text();\n        history = JSON.parse(rawText);\n      } finally {\n        clearTimeout(timeoutId);\n      }\n\n      const entry = history && history[promptId];\n      if (!entry) {\n        if (iteration <= 3 || iteration % 6 === 0) {\n          console.log(\"[HandleImg] iter=\" + iteration + \" elapsed=\" + elapsed + \"ms: promptId not yet in history\");\n        }\n      } else {\n        const completed = entry.status && entry.status.completed;\n        const statusStr = entry.status && entry.status.status_str;\n        if (iteration <= 3 || iteration % 6 === 0 || completed) {\n          console.log(\"[HandleImg] iter=\" + iteration + \" elapsed=\" + elapsed + \"ms: completed=\" + completed + \" status=\" + statusStr);\n        }\n\n        if (completed) {\n          const outputs = entry.outputs || {};\n          const outputKeys = Object.keys(outputs);\n          console.log(\"[HandleImg] Completed! Output nodes:\", outputKeys);\n\n          for (const nodeId of outputKeys) {\n            const nodeOut = outputs[nodeId];\n            const imgs = nodeOut && nodeOut.images;\n            console.log(\"[HandleImg] Node\", nodeId, \"images:\", JSON.stringify(imgs));\n            if (imgs && imgs.length > 0) {\n              const img = imgs[0];\n              imageUrl = comfyHost + \"/view?filename=\" + encodeURIComponent(img.filename) + \"&subfolder=\" + (img.subfolder || \"\") + \"&type=\" + (img.type || \"output\");\n              imageGenerated = true;\n              console.log(\"[HandleImg] Image found:\", imageUrl);\n              break;\n            }\n          }\n          if (imageGenerated) break;\n\n          // Completed but no images found in outputs\n          console.log(\"[HandleImg] Completed but no images. status_str=\" + statusStr);\n          if (statusStr === \"error\" || statusStr === \"success\") break;\n        }\n      }\n    } catch (e) {\n      console.log(\"[HandleImg] iter=\" + iteration + \" Fetch/parse error:\", e.message || String(e));\n    }\n\n    await new Promise(resolve => setTimeout(resolve, pollInterval));\n    elapsed += pollInterval;\n  }\n\n  console.log(\"[HandleImg] Poll loop done. imageGenerated=\" + imageGenerated + \" elapsed=\" + elapsed + \"ms\");\n\n  // Final attempt: fetch history directly without the polling loop logic\n  if (!imageGenerated) {\n    console.log(\"[HandleImg] Making final direct fetch for:\", promptId);\n    try {\n      const finalResp = await fetch(comfyHost + \"/history/\" + promptId);\n      const finalHistory = await finalResp.json();\n      const entry = finalHistory && finalHistory[promptId];\n      if (entry) {\n        console.log(\"[HandleImg] Final fetch entry keys:\", Object.keys(entry));\n        console.log(\"[HandleImg] Final fetch status:\", JSON.stringify(entry.status));\n        const outputs = entry.outputs || {};\n        for (const nodeId of Object.keys(outputs)) {\n          const imgs = outputs[nodeId] && outputs[nodeId].images;\n          if (imgs && imgs.length > 0) {\n            const img = imgs[0];\n            imageUrl = comfyHost + \"/view?filename=\" + encodeURIComponent(img.filename) + \"&subfolder=\" + (img.subfolder || \"\") + \"&type=\" + (img.type || \"output\");\n            imageGenerated = true;\n            console.log(\"[HandleImg] Final fetch found image:\", imageUrl);\n            break;\n          }\n        }\n      } else {\n        console.log(\"[HandleImg] Final fetch: promptId not in history. Keys:\", Object.keys(finalHistory || {}));\n      }\n    } catch (e) {\n      console.log(\"[HandleImg] Final fetch error:\", e.message || String(e));\n    }\n  }\n\n  // Fallback: save comfyui:// reference so approval flow can resolve it\n  if (!imageGenerated && blogData.rowId) {\n    imageUrl = \"comfyui://seo-writer-\" + blogData.rowId;\n    console.log(\"[HandleImg] Using fallback URL:\", imageUrl);\n  }\n}\n\nreturn {\n  json: {\n    ...blogData,\n    imageUrl: imageUrl,\n    imageGenerated: imageGenerated,\n    imageError: inputData.error || null\n  }\n};\n"
+      },
+      "id": "handle-image-result",
+      "name": "Handle Image Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.rowId }}",
+            "Status": "Ready for Review",
+            "Generated_Title": "={{ $json.title }}",
+            "Generated_Content": "={{ $json.content }}",
+            "Generated_Meta_Description": "={{ $json.meta_description }}",
+            "Generated_Keywords": "= {{ $json.keywords }}",
+            "Generated_Categories": "={{ $json.suggested_categories.join(', ') }}",
+            "Generated_Tags": "={{ $json.suggested_tags.join(', ') }}",
+            "Image_URL": "={{ $json.imageUrl }}",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PDF_Links",
+              "displayName": "PDF_Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_Message",
+              "displayName": "Error_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Title",
+              "displayName": "Generated_Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Content",
+              "displayName": "Generated_Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Keywords",
+              "displayName": "Generated_Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Categories",
+              "displayName": "Generated_Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Tags",
+              "displayName": "Generated_Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approve",
+              "displayName": "Approve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WordPress_URL",
+              "displayName": "WordPress_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created_At",
+              "displayName": "Created_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Generated_Meta_Description",
+              "displayName": "Generated_Meta_Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "update-sheet",
+      "name": "Update Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        5000,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check for duplicate publishing - verify status is 'Approved'\nconst inputData = $input.first().json;\nconst body = inputData.body || inputData;\n\nconst status = body.Status || body.status || '';\nconst rowId = body.ID || body.id || body.rowId || '';\n\nif (status !== 'Approved' && status !== 'Ready for Review') {\n  if (status === 'Published') {\n    return {\n      json: {\n        error: 'Content already published',\n        rowId: rowId,\n        isDuplicate: true\n      }\n    };\n  }\n  return {\n    json: {\n      error: `Cannot publish content with status: ${status}`,\n      rowId: rowId\n    }\n  };\n}\n\n// Validate generated content is present before allowing publish\nconst title = body.Generated_Title || '';\nconst content = body.Generated_Content || '';\nif (!title.trim() || !content.trim()) {\n  return {\n    json: {\n      error: 'Cannot publish: Generated_Title or Generated_Content is empty. Run content generation first.',\n      rowId: rowId\n    }\n  };\n}\n\nreturn {\n  json: {\n    ...body,\n    rowId: rowId,\n    rowNumber: body.rowNumber || rowId\n  }\n};"
+      },
+      "id": "check-duplicate",
+      "name": "Check Duplicate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "publish-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "duplicate-check-ok",
+      "name": "Can Publish?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        500,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://innopotentials.com/wp-json/wp/v2/posts",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": {{ JSON.stringify($json.Generated_Title || '') }},\n  \"content\": {{ JSON.stringify($json.Generated_Content || '') }},\n  \"status\": \"draft\",\n  \"excerpt\": {{ JSON.stringify($json.Generated_Meta_Description || '') }}\n}",
+        "options": {
+          "timeout": 30000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Basic bjhuOmtoSFkgRzh5TCBOS25rIDBiYVkgMjNOdSBKS1d0"
+            }
+          ]
+        }
+      },
+      "id": "wordpress-create-post",
+      "name": "Create WordPress Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1250,
+        900
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "wp-error-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty"
+              }
+            },
+            {
+              "id": "wp-id-check",
+              "leftValue": "={{ String($json.id || '') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-wp-error",
+      "name": "WordPress OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Output one item per taxonomy term to create\nconst wpPost = $input.first().json;\nconst approvalData = $('Merge Approval Data').first().json;\n\nconst categories = (approvalData.Generated_Categories || '').split(',').map(c => c.trim()).filter(c => c);\nconst tags = (approvalData.Generated_Tags || '').split(',').map(t => t.trim()).filter(t => t);\n\nconst postId = wpPost.id;\nconst postLink = wpPost.link;\nconst rowId = approvalData.rowId;\n\nconst items = [];\nfor (const catName of categories) {\n  items.push({ json: { type: 'category', endpoint: 'categories', name: catName, postId, postLink, rowId } });\n}\nfor (const tagName of tags) {\n  items.push({ json: { type: 'tag', endpoint: 'tags', name: tagName, postId, postLink, rowId } });\n}\n\nif (items.length === 0) {\n  // No taxonomy items - pass through with skip flag\n  return [{ json: { type: 'none', skip: true, postId, postLink, rowId } }];\n}\n\nreturn items;"
+      },
+      "id": "prepare-taxonomies",
+      "name": "Prepare Taxonomy Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Collect Taxonomy IDs').first().json.rowId }}",
+            "Status": "Published",
+            "WordPress_URL": "={{ $json.link || $('Collect Taxonomy IDs').first().json.postLink }}",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PDF_Links",
+              "displayName": "PDF_Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_Message",
+              "displayName": "Error_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Title",
+              "displayName": "Generated_Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Content",
+              "displayName": "Generated_Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Keywords",
+              "displayName": "Generated_Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Categories",
+              "displayName": "Generated_Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Tags",
+              "displayName": "Generated_Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approve",
+              "displayName": "Approve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WordPress_URL",
+              "displayName": "WordPress_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created_At",
+              "displayName": "Created_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "final-update-sheet",
+      "name": "Final Sheet Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        2750,
+        900
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "admin@stoic-analytics.com",
+        "toEmail": "admin@stoic-analytics.com",
+        "subject": "=SEO Writer Workflow Failed - Row {{ $json.rowId || 'Unknown' }}",
+        "options": {}
+      },
+      "id": "send-error-email",
+      "name": "Send Error Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2250,
+        560
+      ],
+      "webhookId": "587df04d-ada3-496f-b698-65500d752bfe",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.rowId || $('Merge Row Data').first().json.rowId }}",
+            "Status": "Failed",
+            "Error_Message": "={{ $json.error || 'Unknown error' }}",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PDF_Links",
+              "displayName": "PDF_Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_Message",
+              "displayName": "Error_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Title",
+              "displayName": "Generated_Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Content",
+              "displayName": "Generated_Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Keywords",
+              "displayName": "Generated_Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Categories",
+              "displayName": "Generated_Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Tags",
+              "displayName": "Generated_Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approve",
+              "displayName": "Approve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WordPress_URL",
+              "displayName": "WordPress_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created_At",
+              "displayName": "Created_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "update-sheet-error",
+      "name": "Update Sheet Error",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        2000,
+        560
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Merge Row Data').first().json.rowId }} ",
+            "Status": "Failed",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}",
+            "Error_Message": "Invalid URL format. URL must start with http:// or https://"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PDF_Links",
+              "displayName": "PDF_Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_Message",
+              "displayName": "Error_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Title",
+              "displayName": "Generated_Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Content",
+              "displayName": "Generated_Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Keywords",
+              "displayName": "Generated_Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Categories",
+              "displayName": "Generated_Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Tags",
+              "displayName": "Generated_Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approve",
+              "displayName": "Approve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WordPress_URL",
+              "displayName": "WordPress_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created_At",
+              "displayName": "Created_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "url-validation-error",
+      "name": "URL Validation Error",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        560
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Check Duplicate').first().json.rowId || $('Check Duplicate').first().json.ID }}",
+            "Status": "Failed",
+            "Error_Message": "={{ 'WordPress API error: ' + ($json.error || $json.message || 'Unknown error') }}",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PDF_Links",
+              "displayName": "PDF_Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_Message",
+              "displayName": "Error_Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Title",
+              "displayName": "Generated_Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Content",
+              "displayName": "Generated_Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Keywords",
+              "displayName": "Generated_Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Categories",
+              "displayName": "Generated_Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated_Tags",
+              "displayName": "Generated_Tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approve",
+              "displayName": "Approve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WordPress_URL",
+              "displayName": "WordPress_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created_At",
+              "displayName": "Created_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "wp-error-sheet",
+      "name": "WP Error to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        1150
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle LLM timeout or error for keywords\nconst inputData = $input.first().json;\nconst cleanContent = $('Clean Content').first().json;\n\nreturn {\n  json: {\n    error: `Ollama keyword extraction failed: ${inputData.error || 'Timeout or connection error'}`,\n    rowId: cleanContent.rowId,\n    sourceUrl: cleanContent.sourceUrl\n  }\n};"
+      },
+      "id": "keywords-error-handler",
+      "name": "Keywords Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3250,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cd753169-3784-4b7f-adfe-7cf39aff4ac2",
+              "leftValue": "= {{ $json.sourceUrl }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "5885ba40-3aa8-4e9a-830a-69ad22e6857f",
+      "name": "Validate URL"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID",
+              "lookupValue": "={{ $json.rowId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "read-sheet-row",
+      "name": "Read Sheet Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        500,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge webhook data with Google Sheet row data\nconst webhookData = $('Set Variables').first().json;\nconst sheetRow = $input.first().json;\n\n// Sheet columns: ID, URL, PDF_Links, Language, Status, etc.\n// Prefer sheet values, fall back to webhook values\nconst sourceUrl = sheetRow.URL || sheetRow.url || webhookData.sourceUrl || '';\nconst pdfLinks = sheetRow.PDF_Links || sheetRow.pdf_links || sheetRow.pdfLinks || webhookData.pdfLinks || '';\nconst language = sheetRow.Language || sheetRow.language || webhookData.language || 'German';\nconst rowId = webhookData.rowId || sheetRow.ID || '';\n\nreturn {\n  json: {\n    rowId: rowId,\n    sourceUrl: sourceUrl,\n    pdfLinks: pdfLinks,\n    language: language\n  }\n};"
+      },
+      "id": "merge-row-data",
+      "name": "Merge Row Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://innopotentials.com/wp-json/wp/v2/{{ $json.endpoint }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({name: $json.name}) }}",
+        "options": {
+          "timeout": 15000,
+          "batching": {
+            "batch": {
+              "batchSize": 2,
+              "batchInterval": 1000
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Basic bjhuOmtoSFkgRzh5TCBOS25rIDBiYVkgMjNOdSBKS1d0"
+            }
+          ]
+        }
+      },
+      "id": "create-wp-term",
+      "name": "Create WP Term",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2000,
+        900
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const wpPost = $('Create WordPress Draft').first().json;\nconst approvalData = $('Merge Approval Data').first().json;\n\nconst postId = wpPost.id;\nconst postLink = wpPost.link;\nconst rowId = approvalData.rowId;\n\nconst catNames = (approvalData.Generated_Categories || '').split(',').map(c => c.trim()).filter(c => c);\nconst catCount = catNames.length;\n\nconst items = $input.all();\nconst categoryIds = [];\nconst tagIds = [];\n\nfor (let i = 0; i < items.length; i++) {\n  const d = items[i].json;\n  let termId = null;\n\n  // Case 1: Successful creation - direct response with id\n  if (d.id && !d.code && !d.error) {\n    termId = d.id;\n  }\n  // Case 2: term_exists in direct response\n  else if (d.code === 'term_exists' && d.data && d.data.term_id) {\n    termId = d.data.term_id;\n  }\n  // Case 3: Error wrapper from continueOnFail - extract term_id via regex\n  else if (d.error && d.error.message) {\n    const msg = d.error.message;\n    // Look for term_id in the error message string (handles escaped JSON)\n    const termIdMatch = msg.match(/term_id[\"\\\\\\s:]+(\\d+)/);\n    if (termIdMatch) {\n      termId = parseInt(termIdMatch[1], 10);\n    } else {\n      // Try additional_data array\n      const addMatch = msg.match(/additional_data[\"\\\\\\s:\\[]+(\\d+)/);\n      if (addMatch) {\n        termId = parseInt(addMatch[1], 10);\n      }\n    }\n  }\n\n  if (termId) {\n    if (i < catCount) categoryIds.push(termId);\n    else tagIds.push(termId);\n  }\n}\n\n// Build update payload - assign taxonomies only, keep as draft\nconst updatePayload = {};\nif (categoryIds.length > 0) updatePayload.categories = categoryIds;\nif (tagIds.length > 0) updatePayload.tags = tagIds;\n\nreturn {\n  json: {\n    postId,\n    postLink,\n    rowId,\n    categoryIds,\n    tagIds,\n    updateBody: JSON.stringify(updatePayload)\n  }\n};"
+      },
+      "id": "collect-taxonomy-ids",
+      "name": "Collect Taxonomy IDs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2250,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://innopotentials.com/wp-json/wp/v2/posts/{{ $json.postId }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.updateBody }}",
+        "options": {
+          "timeout": 15000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Basic bjhuOmtoSFkgRzh5TCBOS25rIDBiYVkgMjNOdSBKS1d0"
+            }
+          ]
+        }
+      },
+      "id": "update-post-taxonomies",
+      "name": "Update Post Taxonomies",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2500,
+        900
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID",
+              "lookupValue": "={{ $json.rowId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "read-approval-row",
+      "name": "Read Approval Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        750,
+        900
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge Google Sheet data with webhook data for approval\nconst webhookData = $('Check Duplicate').first().json;\nconst sheetRow = $input.first().json;\n\nconst rowId = webhookData.rowId || sheetRow.ID || '';\nconst title = sheetRow.Generated_Title || webhookData.Generated_Title || '';\nconst content = sheetRow.Generated_Content || webhookData.Generated_Content || '';\nconst metaDescription = sheetRow.Generated_Meta_Description || webhookData.Generated_Meta_Description || '';\nconst categories = sheetRow.Generated_Categories || webhookData.Generated_Categories || '';\nconst tags = sheetRow.Generated_Tags || webhookData.Generated_Tags || '';\n\n// Normalize Image_URL: handle legacy comfyui:// and comfyui-local:// formats\nlet imageUrl = sheetRow.Image_URL || webhookData.Image_URL || '';\nif (imageUrl.startsWith('comfyui://') || imageUrl.startsWith('comfyui-local://')) {\n  const rawName = imageUrl.replace(/^comfyui(-local)?:\\/\\//, '');\n  // If it already has an extension, use as-is; otherwise append _00001_.png\n  const filename = /\\.(png|jpg|jpeg|webp)$/i.test(rawName)\n    ? rawName\n    : rawName + '_00001_.png';\n  imageUrl = `http://host.docker.internal:8188/view?filename=${encodeURIComponent(filename)}&subfolder=&type=output`;\n}\n\nreturn {\n  json: {\n    rowId,\n    Generated_Title: title,\n    Generated_Content: content,\n    Generated_Meta_Description: metaDescription,\n    Generated_Categories: categories,\n    Generated_Tags: tags,\n    Image_URL: imageUrl\n  }\n};"
+      },
+      "id": "merge-approval-data",
+      "name": "Merge Approval Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "approval-poll-trigger",
+      "name": "Approval Poll Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "find-approved-rows",
+      "name": "Find Approved Rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        250,
+        1400
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "content-poll-trigger",
+      "name": "Content Poll Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Pending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "find-pending-rows",
+      "name": "Find Pending Rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        250,
+        -200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM",
+          "mode": "list",
+          "cachedResultName": "Innopotentials SEO Writer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Innopotentials",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Fwh_G3txAmSxLfUfcjVAZTfyzGJG7w6CBKuE2h_JmsM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.rowId || $json.ID }}",
+            "Status": "Publishing",
+            "Updated_At": "={{ new Date().toLocaleString('sv-SE', {timeZone: 'Europe/Vienna'}).replace(' ', 'T') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Updated_At",
+              "displayName": "Updated_At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "set-publishing-status",
+      "name": "Set Publishing Status",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        600,
+        900
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mv0H6n1XJDfbYVvo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Merge Approval Data').first().json.Image_URL }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "download-comfyui-image",
+      "name": "Download ComfyUI Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2000,
+        700
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://innopotentials.com/wp-json/wp/v2/media",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Basic bjhuOmtoSFkgRzh5TCBOS25rIDBiYVkgMjNOdSBKS1d0"
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "=attachment; filename=\"{{ $('Merge Approval Data').first().json.Image_URL.split('/').pop().split('?')[0] }}\""
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "upload-wp-media",
+      "name": "Upload WP Media",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2250,
+        700
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://innopotentials.com/wp-json/wp/v2/posts/{{ $('Create WordPress Draft').first().json.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({featured_media: $json.id}) }}",
+        "options": {
+          "timeout": 15000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Basic bjhuOmtoSFkgRzh5TCBOS25rIDBiYVkgMjNOdSBKS1d0"
+            }
+          ]
+        }
+      },
+      "id": "set-featured-image",
+      "name": "Set Featured Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2500,
+        700
+      ],
+      "continueOnFail": true
+    },
+    {
+      "id": "image-available-check",
+      "name": "Image Available?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        900
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "img-url-not-empty",
+              "leftValue": "={{ $('Merge Approval Data').first().json.Image_URL }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Content Poll Trigger": {
+      "main": [
+        [
+          {
+            "node": "Find Pending Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Pending Rows": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Poll Trigger": {
+      "main": [
+        [
+          {
+            "node": "Find Approved Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Approved Rows": {
+      "main": [
+        [
+          {
+            "node": "Check Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Content Request": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Read Sheet Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Processing Status": {
+      "main": [
+        [
+          {
+            "node": "Fetch URL Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch URL Content": {
+      "main": [
+        [
+          {
+            "node": "Clean Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Content": {
+      "main": [
+        [
+          {
+            "node": "Scrape Successful?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Successful?": {
+      "main": [
+        [
+          {
+            "node": "Has PDF?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Sheet Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has PDF?": {
+      "main": [
+        [
+          {
+            "node": "Parse PDF Links",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse PDF Links": {
+      "main": [
+        [
+          {
+            "node": "Download PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download PDF": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF Text": {
+      "main": [
+        [
+          {
+            "node": "Merge Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Content": {
+      "main": [
+        [
+          {
+            "node": "Extract Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Keywords": {
+      "main": [
+        [
+          {
+            "node": "Keywords OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keywords OK?": {
+      "main": [
+        [
+          {
+            "node": "Generate Blog Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Keywords Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keywords Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Blog Post": {
+      "main": [
+        [
+          {
+            "node": "Parse Blog Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Blog Response": {
+      "main": [
+        [
+          {
+            "node": "Parse OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse OK?": {
+      "main": [
+        [
+          {
+            "node": "Generate Image Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Sheet Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Handle Image Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Image Result": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Duplicate": {
+      "main": [
+        [
+          {
+            "node": "Can Publish?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Can Publish?": {
+      "main": [
+        [
+          {
+            "node": "Set Publishing Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Approval Row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WP Error to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create WordPress Draft": {
+      "main": [
+        [
+          {
+            "node": "WordPress OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordPress OK?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Taxonomy Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image Available?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WP Error to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet Error": {
+      "main": [
+        [
+          {
+            "node": "Send Error Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate URL": {
+      "main": [
+        [
+          {
+            "node": "Set Processing Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "URL Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sheet Row": {
+      "main": [
+        [
+          {
+            "node": "Merge Row Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Row Data": {
+      "main": [
+        [
+          {
+            "node": "Validate URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL Validation Error": {
+      "main": [
+        [
+          {
+            "node": "Send Error Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Taxonomy Items": {
+      "main": [
+        [
+          {
+            "node": "Create WP Term",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create WP Term": {
+      "main": [
+        [
+          {
+            "node": "Collect Taxonomy IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Taxonomy IDs": {
+      "main": [
+        [
+          {
+            "node": "Update Post Taxonomies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Approval Row": {
+      "main": [
+        [
+          {
+            "node": "Merge Approval Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Approval Data": {
+      "main": [
+        [
+          {
+            "node": "Create WordPress Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Post Taxonomies": {
+      "main": [
+        [
+          {
+            "node": "Final Sheet Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download ComfyUI Image": {
+      "main": [
+        [
+          {
+            "node": "Upload WP Media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload WP Media": {
+      "main": [
+        [
+          {
+            "node": "Set Featured Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Available?": {
+      "main": [
+        [
+          {
+            "node": "Download ComfyUI Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": {
+    "node:Approval Poll Trigger": {
+      "recurrenceRules": []
+    },
+    "node:Content Poll Trigger": {
+      "recurrenceRules": []
+    }
+  }
+}

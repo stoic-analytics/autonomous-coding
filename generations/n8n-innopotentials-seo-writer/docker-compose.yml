@@ -34,6 +34,8 @@ services:
       - SMTP_TO=${SMTP_TO}
       # Allow access to env vars in expressions
       - N8N_ACCESSIBLE_ENV_VARS=GOOGLE_SHEET_ID,OLLAMA_HOST,OLLAMA_MODEL,COMFYUI_HOST,WORDPRESS_URL,SMTP_FROM,SMTP_TO
+      # Task runner timeout: allow up to 12 minutes for long-running code nodes (e.g. ComfyUI polling)
+      - N8N_RUNNERS_TASK_TIMEOUT=720
       # Sequential processing: limit concurrent production executions
       - N8N_CONCURRENCY_PRODUCTION_LIMIT=5
       # Execution pruning: keep last 7 days, max 500 executions
