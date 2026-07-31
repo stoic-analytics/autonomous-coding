@@ -193,8 +193,17 @@ def validate_pkill_command(command_string: str) -> tuple[bool, str]:
         "next",
     }
 
+    import re
+
+    # Strip shell redirections (e.g. "2>/dev/null", ">out.log", "2>&1") before
+    # tokenizing. shlex doesn't understand redirection operators, so without
+    # this they get parsed as a plain argument and can be mistaken for the
+    # pkill target (e.g. "pkill -f node 2>/dev/null" would otherwise see
+    # "2>/dev/null" as the target instead of "node").
+    cleaned_command = re.sub(r"\d*>{1,2}&?\s*\S*", "", command_string)
+
     try:
-        tokens = shlex.split(command_string)
+        tokens = shlex.split(cleaned_command)
     except ValueError:
         return False, "Could not parse pkill command"
 
@@ -213,12 +222,17 @@ def validate_pkill_command(command_string: str) -> tuple[bool, str]:
     # The target is typically the last non-flag argument
     target = args[-1]
 
-    # For -f flag (full command line match), extract the first word as process name
-    # e.g., "pkill -f 'node server.js'" -> target is "node server.js", process is "node"
+    # Extract the leading identifier from the target. Handles:
+    #   "node"                        -> "node"
+    #   "node server.js"              -> "node" (literal command line, split on space)
+    #   "node.*aqipa.*index.js"       -> "node" (regex/glob pattern passed to -f,
+    #                                             stops at the first non-word char)
     if " " in target:
         target = target.split()[0]
+    match = re.match(r"[A-Za-z0-9_]+", target)
+    process_name = match.group(0) if match else target
 
-    if target in allowed_process_names:
+    if process_name in allowed_process_names:
         return True, ""
     return False, f"pkill only allowed for dev processes: {allowed_process_names}"
 
