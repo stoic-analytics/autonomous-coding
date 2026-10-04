@@ -23,6 +23,28 @@ from dotenv import load_dotenv
 # IMPORTANT: Must be called BEFORE importing other modules that read env vars at load time
 load_dotenv()
 
+
+def apply_auth_mode() -> str:
+    """
+    Pick between Claude subscription and API billing via AUTH_MODE.
+
+    - subscription: ignore ANTHROPIC_API_KEY so the Claude CLI login is used
+    - api: require ANTHROPIC_API_KEY
+    - auto (default): leave the environment untouched (a key, if set, wins)
+    """
+    mode = os.environ.get("AUTH_MODE", "auto").strip().lower()
+    if mode == "subscription":
+        os.environ.pop("ANTHROPIC_API_KEY", None)
+    elif mode == "api":
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            raise SystemExit("AUTH_MODE=api but ANTHROPIC_API_KEY is not set (.env or shell)")
+    elif mode != "auto":
+        raise SystemExit(f"Invalid AUTH_MODE={mode!r} (use subscription, api or auto)")
+    return mode
+
+
+AUTH_MODE = apply_auth_mode()
+
 from agent import run_autonomous_agent
 
 
@@ -50,9 +72,10 @@ Examples:
   # Continue existing project
   python autonomous_agent_demo.py --project-dir ./claude_clone
 
-Authentication:
-  Uses Claude CLI credentials from ~/.claude/.credentials.json
-  Run 'claude login' to authenticate (handled by start.bat/start.sh)
+Authentication (set AUTH_MODE in .env or the shell):
+  AUTH_MODE=subscription  Use the Claude CLI login (run 'claude login'); ignores ANTHROPIC_API_KEY
+  AUTH_MODE=api           Use ANTHROPIC_API_KEY (API billing)
+  AUTH_MODE=auto          Default: an ANTHROPIC_API_KEY, if set, takes precedence
         """,
     )
 
@@ -84,8 +107,10 @@ def main() -> None:
     """Main entry point."""
     args = parse_args()
 
-    # Note: Authentication is handled by start.bat/start.sh before this script runs.
-    # The Claude SDK auto-detects credentials from ~/.claude/.credentials.json
+    # Authentication: see apply_auth_mode(). Without an API key the Claude SDK
+    # uses the Claude CLI login (set up by start.bat/start.sh).
+    using_api = bool(os.environ.get("ANTHROPIC_API_KEY"))
+    print(f"Auth: AUTH_MODE={AUTH_MODE} -> {'API key' if using_api else 'Claude subscription'}")
 
     # Automatically place projects in generations/ directory unless already specified
     project_dir = args.project_dir
